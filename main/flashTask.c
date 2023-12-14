@@ -2,7 +2,7 @@
 
 static const char *TAG = "FLASH:";
 
-#define NAND_FLASH()    vTaskDelay(5000 / portTICK_PERIOD_MS)
+#define NAND_FLASH()    vTaskDelay(1000 / portTICK_PERIOD_MS)
 
 /******************************************************************************************
  * 'flashTask' main function
@@ -19,9 +19,11 @@ flashTask(void *pvParameters)
 		{
 			nandStatus = nandIsBusy;
 			xQueueOverwrite(queueNandStatus, &nandStatus);
+
 			xQueuePeek(queueNandPageBuffer, pageBuff, (TickType_t)100);
 			ESP_LOGI(TAG, "WILL BE WRITTEN TO NAND: %s", pageBuff);
 			NAND_FLASH();
+
 			nandStatus = nandIsReady;
 			xQueueOverwrite(queueNandStatus, &nandStatus);
 		}
