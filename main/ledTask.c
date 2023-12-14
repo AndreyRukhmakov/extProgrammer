@@ -22,7 +22,7 @@ ledTask(void *pvParameters)
 			gpio_set_level(LED_PIN, 1);
 			vTaskDelay(50 / portTICK_PERIOD_MS);
 			gpio_set_level(LED_PIN, 0);
-			vTaskDelay(5000 / portTICK_PERIOD_MS);
+			vTaskDelay(3000 / portTICK_PERIOD_MS);
 			break;
 		case fastBlink:
 			gpio_set_level(LED_PIN, 1);
