@@ -1,7 +1,9 @@
 #include "queuesApp.h"
 
 QueueHandle_t      queueLedMode;
-SemaphoreHandle_t xNandSemaphore;
+QueueHandle_t      queueNandStatus;
+QueueHandle_t      queueNandPageBuffer;
+SemaphoreHandle_t  xNandSemaphore;
 
 
 /******************************************************************************************
@@ -9,9 +11,15 @@ SemaphoreHandle_t xNandSemaphore;
  ******************************************************************************************/
 void createQueues(void)
 {
-	ledModeType ledMode = usualBlink;
-	queueLedMode = xQueueCreate(1, sizeof(ledModeType));
+	unsigned char ledMode = usualBlink;
+	queueLedMode = xQueueCreate(1, sizeof(unsigned char));
 	xQueueOverwrite(queueLedMode, &ledMode);
+
+	unsigned char nandStatus = nandIsReady;
+	queueNandStatus = xQueueCreate(1, sizeof(unsigned char));
+	xQueueOverwrite(queueNandStatus, &nandStatus);
+
+	queueNandPageBuffer = xQueueCreate(1, NAND_PAGE_SIZE);
 
 	xNandSemaphore = xSemaphoreCreateBinary();
 }

@@ -2,17 +2,28 @@
 
 static const char *TAG = "FLASH:";
 
+#define NAND_FLASH()    vTaskDelay(5000 / portTICK_PERIOD_MS)
+
 /******************************************************************************************
  * 'flashTask' main function
  ******************************************************************************************/
 void
 flashTask(void *pvParameters)
 {
+	unsigned char nandStatus = nandIsReady;
+	char pageBuff[NAND_PAGE_SIZE];
+
 	while(1)
 	{
 		if(xSemaphoreTake(xNandSemaphore, portMAX_DELAY) == pdTRUE)
 		{
-			ESP_LOGI(TAG, "NAND semaphore take"); //work with xSemaphoreGive(xNandSemaphore);
+			nandStatus = nandIsBusy;
+			xQueueOverwrite(queueNandStatus, &nandStatus);
+			xQueuePeek(queueNandPageBuffer, pageBuff, (TickType_t)100);
+			ESP_LOGI(TAG, "WILL BE WRITTEN TO NAND: %s", pageBuff);
+			NAND_FLASH();
+			nandStatus = nandIsReady;
+			xQueueOverwrite(queueNandStatus, &nandStatus);
 		}
 	}
 }

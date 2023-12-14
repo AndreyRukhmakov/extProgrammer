@@ -7,7 +7,7 @@
 void
 ledTask(void *pvParameters)
 {
-	ledModeType ledMode = usualBlink;
+	unsigned char ledMode = usualBlink;
 
 	gpio_reset_pin((gpio_num_t)LED_PIN);
 	gpio_set_direction((gpio_num_t)LED_PIN, GPIO_MODE_OUTPUT);
