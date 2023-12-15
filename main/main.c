@@ -11,7 +11,7 @@ app_main(void)
     ESP_ERROR_CHECK(nvs_flash_init());
 
     wifiStationInit();
-    createQueues();
+    createSQM();
 
     xTaskCreate(ledTask,       "ledTask",       2048, NULL, 5, NULL);
     xTaskCreate(tcpServerTask, "tcpServerTask", 6144, NULL, 5, NULL);

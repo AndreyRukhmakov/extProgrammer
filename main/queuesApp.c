@@ -7,9 +7,9 @@ SemaphoreHandle_t  xNandSemaphore;
 
 
 /******************************************************************************************
- * queues creation function
+ * semaphores, queues, mutexes init
  ******************************************************************************************/
-void createQueues(void)
+void createSQM(void)
 {
 	unsigned char ledMode = usualBlink;
 	queueLedMode = xQueueCreate(1, sizeof(unsigned char));

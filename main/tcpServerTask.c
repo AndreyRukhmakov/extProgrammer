@@ -8,6 +8,7 @@
 static const char *TAG = "TCP:";
 
 unsigned char deviceStatus = readyToFlash;
+unsigned char ledBlinkMode = usualBlink;
 
 /******************************************************************************************
  * content parser
@@ -48,11 +49,17 @@ dataParse(char *data, int dataLen)
         {
         	deviceStatus = flashing;
         	retVal = startFlash;
+
+        	ledBlinkMode = fastBlink;
+			xQueueOverwrite(queueLedMode, &ledBlinkMode);
         }
         else if (0 == strcmp(json_string_value(status), "stop"))
         {
         	deviceStatus = readyToFlash;
         	retVal = stopFlash;
+
+        	ledBlinkMode = usualBlink;
+			xQueueOverwrite(queueLedMode, &ledBlinkMode);
         }
         else if (0 == strcmp(json_string_value(status), "status?"))
         {
@@ -84,11 +91,11 @@ void
 dataProcessing(const int sock)
 {
     int len;
-    char rxBuffer[NAND_PAGE_SIZE];
+    char buff[NAND_PAGE_SIZE];
 
-    memset(rxBuffer, 0, sizeof(rxBuffer));
+    memset(buff, 0, sizeof(buff));
 
-    len = recv(sock, rxBuffer, sizeof(rxBuffer), 0);
+    len = recv(sock, buff, sizeof(buff), 0);
 
     if (len < 0)
     {
@@ -100,33 +107,33 @@ dataProcessing(const int sock)
     }
     else
     {
-        unsigned char error = dataParse(rxBuffer, len);
+        unsigned char retVal = dataParse(buff, len);
 
-        switch(error)
+        switch(retVal)
         {
         case nandIsBusy:
-        	strcpy(rxBuffer, "nandIsBusy");
+        	strcpy(buff, "nandIsBusy");
             break;
         case ok:
-        	strcpy(rxBuffer, "ok");
+        	strcpy(buff, "ok");
             break;
         case startFlash:
-        	strcpy(rxBuffer, "startFlash");
+        	strcpy(buff, "startFlash");
             break;
         case flashing:
-        	strcpy(rxBuffer, "flashing");
+        	strcpy(buff, "flashing");
             break;
         case stopFlash:
-        	strcpy(rxBuffer, "stopFlash");
+        	strcpy(buff, "stopFlash");
             break;
         case jsonIsUnknown:
-        	strcpy(rxBuffer, "jsonIsUnknown");
+        	strcpy(buff, "jsonIsUnknown");
             break;
         default:
         	break;
         }
 
-        int written = send(sock, rxBuffer, strlen((const char *)rxBuffer), 0);
+        int written = send(sock, buff, strlen((const char *)buff), 0);
 
         if (written < 0)
         {
@@ -195,8 +202,6 @@ tcpServerTask(void *pvParameters)
 
     while (1)
     {
-        ESP_LOGI(TAG, "Socket listening");
-
         struct sockaddr_storage source_addr;
         socklen_t addr_len = sizeof(source_addr);
         int sock = accept(listen_sock, (struct sockaddr *)&source_addr, &addr_len);
@@ -218,7 +223,7 @@ tcpServerTask(void *pvParameters)
             inet_ntoa_r(((struct sockaddr_in *)&source_addr)->sin_addr, addrStr, sizeof(addrStr) - 1);
         }
 
-        ESP_LOGI(TAG, "Accepted ip: %s", addrStr);
+//        ESP_LOGI(TAG, "Accepted ip: %s", addrStr);
 
         dataProcessing(sock);
 

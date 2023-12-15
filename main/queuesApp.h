@@ -8,6 +8,6 @@ extern QueueHandle_t     queueNandStatus;
 extern QueueHandle_t     queueNandPageBuffer;
 extern SemaphoreHandle_t xNandSemaphore;
 
-void createQueues(void);
+void createSQM(void);
 
 #endif /* MAIN_QUEUESAPP_H_ */
