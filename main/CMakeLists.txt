@@ -7,6 +7,7 @@ set(COMPONENT_PRIV_REQUIRES )
 set(COMPONENT_SRCS  "main.c"
                     "queuesApp.c"
                     "wifiStation.c"
+                    "nand.c"
                     "ledTask.c"
                     "tcpServerTask.c"     
                     "flashTask.c"           

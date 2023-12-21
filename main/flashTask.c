@@ -13,6 +13,10 @@ flashTask(void *pvParameters)
 	unsigned char nandStatus = nandIsReady;
 	char pageBuff[NAND_PAGE_SIZE];
 
+	vTaskDelay(50 / portTICK_PERIOD_MS);
+	nandGpioInit();
+	nandReadId();
+
 	while(1)
 	{
 		if(xSemaphoreTake(xNandSemaphore, portMAX_DELAY) == pdTRUE)

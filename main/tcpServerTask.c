@@ -73,6 +73,7 @@ dataParse(char *data, int dataLen)
     }
     else if ((deviceStatus == flashing) && (NULL == obj))
     {
+//TODO add timer for stop if data can't be obtained more.
     	xQueueOverwrite(queueNandPageBuffer, data);
     	xSemaphoreGive(xNandSemaphore);
     	deviceStatus = flashing;

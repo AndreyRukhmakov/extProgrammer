@@ -28,6 +28,7 @@
 #include "ledTask.h"
 #include "tcpServerTask.h"
 #include "flashTask.h"
+#include "nand.h"
 
 #ifndef JSON_HUMAN
 #define JSON_HUMAN (JSON_INDENT(4) | JSON_SORT_KEYS)
@@ -73,20 +74,20 @@ typedef enum {
  ******************************************************************************************/
 #define NAND_PAGE_SIZE         2048U
 
-#define NAND_PIN_IO_0
-#define NAND_PIN_IO_1
-#define NAND_PIN_IO_2
-#define NAND_PIN_IO_3
-#define NAND_PIN_IO_4
-#define NAND_PIN_IO_5
-#define NAND_PIN_IO_6
-#define NAND_PIN_IO_7
+#define NAND_PIN_IO_0           4U
+#define NAND_PIN_IO_1          13U
+#define NAND_PIN_IO_2          32U
+#define NAND_PIN_IO_3          33U
+#define NAND_PIN_IO_4          25U
+#define NAND_PIN_IO_5          26U
+#define NAND_PIN_IO_6          27U
+#define NAND_PIN_IO_7          14U
 
-#define NAND_PIN_CE
-#define NAND_PIN_ALE
-#define NAND_PIN_CLE
-#define NAND_PIN_RE
-#define NAND_PIN_WE
-#define NAND_PIN_R_B
+#define NAND_PIN_CE             5U // Chip Enable
+#define NAND_PIN_ALE           18U // Address latch
+#define NAND_PIN_CLE           23U // Command latch
+#define NAND_PIN_RE            22U // Read enable
+#define NAND_PIN_WE            21U // Write enable
+#define NAND_PIN_RB            19U // Read/Busy
 
 #endif /* MAIN_APPCONFIG_H_ */
